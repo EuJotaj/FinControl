@@ -1,0 +1,131 @@
+<div class="min-h-screen text-white selection:bg-emerald-500 selection:text-black">
+  
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between mix-blend-difference">
+    <div class="flex items-center gap-2">
+      <div class="w-2 h-2 bg-emerald-500"></div>
+      <span class="text-[10px] font-black uppercase tracking-[0.4em]">FinControl / System</span>
+    </div>
+    <div class="flex items-center gap-12">
+      <a routerLink="/auth/login" class="text-[10px] font-black uppercase tracking-widest hover:text-emerald-500 transition-colors">Acessar Terminal</a>
+      <a routerLink="/auth/register" class="bg-white text-black px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 transition-all">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="min-h-screen flex flex-col justify-center px-8 pt-32 relative overflow-hidden">
+    <!-- Background Grid -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none" 
+      style="background-image: linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px); background-size: 80px 80px;">
+    </div>
+
+    <div class="relative z-10 transition-all">
+      <div class="flex flex-col gap-0 reveal-up">
+        <h1 class="text-brutal font-black text-white italic leading-none">
+          PRECISION<br/>
+          <span class="text-transparent stroke-text not-italic">FINANCE</span><br/>
+          <span class="text-emerald-500 not-italic">ENGINE.</span>
+        </h1>
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mt-4">
+          <div class="max-w-sm pb-8">
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-relaxed">
+              Alta performance em controle de ativos, fluxos de caixa e gestão redundante de capital. Projetado para precisão extrema e escalabilidade Saas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-12 left-8 flex items-center gap-4 text-slate-700 animate-bounce">
+      <span class="material-icons-outlined text-sm">south</span>
+      <span class="text-[8px] font-black uppercase tracking-widest">Protocolo de Exploração</span>
+    </div>
+  </section>
+
+  <!-- Features (Brutalist Grid) -->
+  <section class="px-8 py-32 border-t border-slate-900">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-l border-t border-slate-900">
+      
+      <!-- Feature 1 -->
+      <div class="p-12 border-r border-b border-slate-900 group hover:bg-emerald-500 transition-all duration-500 reveal-in">
+        <span class="text-[10px] font-black text-slate-700 group-hover:text-black transition-colors">01 / CAPITAIS</span>
+        <h3 class="text-3xl font-black mt-8 mb-4 group-hover:text-black">Gestão Real-Time</h3>
+        <p class="text-xs text-slate-500 font-medium group-hover:text-emerald-950 transition-colors uppercase tracking-tight">
+          Sincronização instantânea de fluxos multidimensionais entre contas e carteiras.
+        </p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="p-12 border-r border-b border-slate-900 group hover:bg-white transition-all duration-500 reveal-in" style="animation-delay: 0.1s">
+        <span class="text-[10px] font-black text-slate-700 group-hover:text-black transition-colors">02 / SEGURANÇA</span>
+        <h3 class="text-3xl font-black mt-8 mb-4 group-hover:text-black">Zero-Trust Guard</h3>
+        <p class="text-xs text-slate-500 font-medium group-hover:text-slate-950 transition-colors uppercase tracking-tight">
+          Arquitetura isolada por tenat com autenticação redundante e criptografia de ponta.
+        </p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="p-12 border-r border-b border-slate-900 group hover:bg-emerald-500 transition-all duration-500 reveal-in" style="animation-delay: 0.2s">
+        <span class="text-[10px] font-black text-slate-700 group-hover:text-black transition-colors">03 / ANALYTICS</span>
+        <h3 class="text-3xl font-black mt-8 mb-4 group-hover:text-black">Previsão Neural</h3>
+        <p class="text-xs text-slate-500 font-medium group-hover:text-emerald-950 transition-colors uppercase tracking-tight">
+          Algoritmos preditivos para identificação de padrões de consumo e otimização de teto.
+        </p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="p-12 border-r border-b border-slate-900 group hover:bg-white transition-all duration-500 reveal-in" style="animation-delay: 0.3s">
+        <span class="text-[10px] font-black text-slate-700 group-hover:text-black transition-colors">04 / INTERFACE</span>
+        <h3 class="text-3xl font-black mt-8 mb-4 group-hover:text-black">UX Precision</h3>
+        <p class="text-xs text-slate-500 font-medium group-hover:text-slate-950 transition-colors uppercase tracking-tight">
+          Experiência técnica projetada para operadores que exigem clareza absoluta e velocidade.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Big CTA -->
+  <section class="px-8 py-64 flex flex-col items-center justify-center text-center bg-emerald-500 text-black">
+    <h2 class="text-brutal font-black mb-12">CONTROL.</h2>
+    <a routerLink="/auth/register" class="group flex items-center gap-6 bg-black text-white px-12 py-6 rounded-full hover:scale-110 transition-all duration-500">
+      <span class="text-xl font-black uppercase tracking-widest">Iniciar Deploy Agora</span>
+      <span class="material-icons-outlined text-4xl group-hover:translate-x-4 transition-transform">east</span>
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="p-20 border-t border-slate-900 flex flex-col md:flex-row justify-between gap-20">
+    <div class="flex flex-col gap-8">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 bg-emerald-500"></div>
+        <span class="text-[10px] font-black uppercase tracking-[0.4em]">FinControl / Precision</span>
+      </div>
+      <p class="text-[8px] font-mono text-slate-600 uppercase tracking-tighter">
+        FinControl Precision Engine © 2026 / All Rights Reserved <br/>
+        System Status: Global Grid Active
+      </p>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-20">
+      <div class="flex flex-col gap-4">
+        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocolos</span>
+        <a class="text-[10px] font-black uppercase tracking-tight hover:text-emerald-500 transition-colors">API Docs</a>
+        <a class="text-[10px] font-black uppercase tracking-tight hover:text-emerald-500 transition-colors">Security</a>
+        <a class="text-[10px] font-black uppercase tracking-tight hover:text-emerald-500 transition-colors">Termos</a>
+      </div>
+      <div class="flex flex-col gap-4">
+        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Social</span>
+        <a class="text-[10px] font-black uppercase tracking-tight hover:text-emerald-500 transition-colors">X / Twitter</a>
+        <a class="text-[10px] font-black uppercase tracking-tight hover:text-emerald-500 transition-colors">GitHub</a>
+        <a class="text-[10px] font-black uppercase tracking-tight hover:text-emerald-500 transition-colors">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<style>
+  .stroke-text {
+    -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+  }
+</style>

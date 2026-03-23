@@ -1,0 +1,170 @@
+<div aria-label="Subscriptions" class="space-y-6 animate-fade-in" *ngIf="subscriptions$ | async as subscriptions; else loading">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold dark:text-white">Assinaturas</h1>
+      <p class="text-slate-500 text-sm">Controle seus serviços recorrentes</p>
+    </div>
+    <button (click)="openAddSubscription()"
+      class="inline-flex items-center gap-2 bg-primary-light hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary-light/20 self-start sm:self-auto">
+      <span class="material-icons-outlined text-base">add</span>
+      Nova Assinatura
+    </button>
+  </div>
+
+  <!-- Cost Summary Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+    <!-- Total subscriptions -->
+    <div class="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-2xl p-5 text-white shadow-lg shadow-emerald-500/20">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-sm font-medium text-emerald-100">Total de Assinaturas</p>
+        <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+          <span class="material-icons-outlined text-base">subscriptions</span>
+        </div>
+      </div>
+      <p class="text-3xl font-black">{{ subscriptions.length }}</p>
+      <p class="text-xs text-emerald-200 mt-1">
+        {{ (monthlyCount$ | async) }} mensal · {{ (annualCount$ | async) }} anual
+      </p>
+    </div>
+
+    <!-- Monthly spend -->
+    <div class="bg-card-light dark:bg-card-dark rounded-2xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-sm font-medium text-slate-500">Gasto Mensal</p>
+        <div class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
+          <span class="material-icons-outlined text-base text-blue-500">calendar_month</span>
+        </div>
+      </div>
+      <p class="text-2xl font-black dark:text-white">{{ (monthlyCost$ | async) | currency:settingsService.currency }}</p>
+      <p class="text-xs text-slate-400 mt-1">por mês (incluindo anuais ÷ 12)</p>
+    </div>
+
+    <!-- Annual spend -->
+    <div class="bg-card-light dark:bg-card-dark rounded-2xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-sm font-medium text-slate-500">Gasto Anual</p>
+        <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+          <span class="material-icons-outlined text-base text-emerald-500">event_repeat</span>
+        </div>
+      </div>
+      <p class="text-2xl font-black dark:text-white">{{ (annualCost$ | async) | currency:settingsService.currency }}</p>
+      <p class="text-xs text-slate-400 mt-1">por ano (mensais × 12)</p>
+    </div>
+
+  </div>
+
+  <!-- Subscriptions Grid -->
+  <div *ngIf="subscriptions.length > 0; else emptyState" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+    <div *ngFor="let s of subscriptions"
+      class="bg-card-light dark:bg-card-dark rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-primary-light/20 group">
+
+      <!-- Top row -->
+      <div class="flex items-start justify-between mb-4">
+        <div class="w-11 h-11 rounded-xl bg-primary-light/10 border border-primary-light/20 flex items-center justify-center text-primary-light flex-shrink-0">
+          <span class="material-icons-outlined text-xl">{{ s.icon || 'autorenew' }}</span>
+        </div>
+        <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg" [ngClass]="getFrequencyColor(s.frequency)">
+          {{ getFrequencyLabel(s.frequency) }}
+        </span>
+      </div>
+
+      <!-- Name & price -->
+      <h3 class="text-base font-bold dark:text-white mb-0.5 group-hover:text-primary-light transition-colors">{{ s.name }}</h3>
+      <p class="text-2xl font-black text-primary-light mb-1">{{ s.amount | currency:settingsService.currency }}</p>
+      <p class="text-xs text-slate-400 mb-4">
+        <ng-container *ngIf="s.frequency === 'MONTHLY'">
+          ≈ {{ s.amount * 12 | currency:settingsService.currency }}/ano
+        </ng-container>
+        <ng-container *ngIf="s.frequency !== 'MONTHLY'">
+          ≈ {{ s.amount / 12 | currency:settingsService.currency }}/mês
+        </ng-container>
+      </p>
+
+      <!-- Footer Actions -->
+      <div class="flex flex-col gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div class="flex items-center justify-between text-xs">
+          <div class="flex items-center gap-1" [ngClass]="getUrgencyClass(s.nextBillingDate)">
+            <span class="material-icons-outlined text-xs">event</span>
+            <span>Próximo: {{ s.nextBillingDate | date:'dd/MM/yy' }}</span>
+            <span *ngIf="getDaysUntilBilling(s.nextBillingDate) <= 7 && s.status === 'ACTIVE'" class="font-bold">
+              ({{ getDaysUntilBilling(s.nextBillingDate) }}d)
+            </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button (click)="onEdit(s)" class="text-slate-400 hover:text-primary-light transition-colors p-1">
+              <span class="material-icons-outlined text-sm">edit</span>
+            </button>
+            <button (click)="onDelete(s.id)" class="text-slate-400 hover:text-rose-500 transition-colors p-1">
+              <span class="material-icons-outlined text-sm">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Action Buttons based on status -->
+          <ng-container [ngSwitch]="s.status">
+            <!-- ACTIVE: Show Pay and Cancel -->
+            <ng-container *ngSwitchCase="'ACTIVE'">
+              <button (click)="onPay(s.id)" 
+                class="flex-1 bg-primary-light hover:bg-primary-dark text-white py-2 rounded-xl text-[10px] font-bold transition-all shadow-sm">
+                MARCAR COMO PAGO
+              </button>
+              <button (click)="onCancel(s.id)" 
+                class="px-3 border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 py-2 rounded-xl text-[10px] font-bold transition-all">
+                CANCELAR
+              </button>
+            </ng-container>
+
+            <!-- PAID: Show Renew (if subscription period is over) or just status -->
+            <ng-container *ngSwitchCase="'PAID'">
+              <div class="flex-1 flex items-center justify-center gap-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 py-2 rounded-xl text-[10px] font-black italic">
+                <span class="material-icons-outlined text-xs">check_circle</span>
+                PAGAMENTO CONFIRMADO
+              </div>
+              <button (click)="onRenew(s.id)" 
+                class="px-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 py-2 rounded-xl text-[10px] font-bold transition-all">
+                RENOVAR
+              </button>
+            </ng-container>
+
+            <!-- CANCELED: Show Reactivate -->
+            <ng-container *ngSwitchCase="'CANCELED'">
+              <div class="flex-1 text-center text-slate-400 py-2 text-[10px] font-bold uppercase tracking-widest italic line-through decoration-rose-500/50">
+                ASSINATURA CANCELADA
+              </div>
+              <button (click)="onPay(s.id)" 
+                class="px-3 bg-primary-light text-white py-2 rounded-xl text-[10px] font-bold shadow-sm">
+                REATIVAR
+              </button>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <ng-template #emptyState>
+    <div class="flex flex-col items-center justify-center py-20 text-slate-400">
+      <span class="material-icons-outlined text-6xl mb-4 opacity-30">subscriptions</span>
+      <p class="text-lg font-bold mb-1 dark:text-white/40">Nenhuma assinatura</p>
+      <p class="text-sm mb-6">Adicione seus serviços recorrentes para acompanhá-los.</p>
+      <button (click)="openAddSubscription()" class="inline-flex items-center gap-2 bg-primary-light text-white px-5 py-2.5 rounded-xl text-sm font-bold">
+        <span class="material-icons-outlined text-base">add</span>
+        Adicionar Assinatura
+      </button>
+    </div>
+  </ng-template>
+
+</div>
+
+<!-- Loading -->
+<ng-template #loading>
+  <div class="flex flex-col items-center justify-center h-64 gap-3">
+    <div class="w-10 h-10 border-4 border-slate-200 dark:border-slate-700 border-t-primary-light rounded-full animate-spin"></div>
+    <p class="text-slate-400 text-sm">Carregando assinaturas...</p>
+  </div>
+</ng-template>

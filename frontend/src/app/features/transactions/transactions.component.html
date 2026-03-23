@@ -1,0 +1,150 @@
+<div class="space-y-8 reveal-up" [formGroup]="filterForm">
+ 
+  <!-- Precision Header -->
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-slate-100 dark:border-slate-800 pb-8">
+    <div>
+      <h1 class="text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-[0.85]">
+        Extrato<br/>
+        <span class="text-emerald-500 font-medium tracking-normal normal-case text-sm">Controle de fluxo de caixa</span>
+      </h1>
+    </div>
+    <div class="flex items-center gap-3">
+
+      <!-- Filter toggle Precision -->
+      <button (click)="toggleFilters()"
+        [class.border-emerald-500]="showFilters || hasActiveFilters"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-black uppercase tracking-widest transition-all hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 relative">
+        <span class="material-icons-outlined text-base">tune</span>
+        Filtros
+        <span *ngIf="hasActiveFilters" class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-950 animate-pulse"></span>
+      </button>
+
+      <!-- Nova Transação Precision -->
+      <button (click)="openNewTransaction()"
+        class="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 text-[10px] font-black uppercase tracking-widest transition-all hover:bg-emerald-500 shadow-lg shadow-emerald-500/10">
+        <span class="material-icons-outlined text-base">add_circle</span>
+        Nova Transação
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter panel Precision -->
+  <div *ngIf="showFilters"
+    class="precision-card p-6 reveal-in">
+    <div class="flex flex-col sm:flex-row gap-6">
+
+      <!-- Type -->
+      <div class="flex-1">
+        <label class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block">Direção</label>
+        <select formControlName="type"
+          class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md px-3 py-2.5 text-xs font-black uppercase tracking-wider outline-none focus:border-emerald-500/50 dark:text-slate-200 transition-all">
+          <option value="ALL">Todo Fluxo</option>
+          <option value="INCOME">Entradas (+)</option>
+          <option value="EXPENSE">Saídas (−)</option>
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div class="flex-1">
+        <label class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block">Estado</label>
+        <select formControlName="status"
+          class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md px-3 py-2.5 text-xs font-black uppercase tracking-wider outline-none focus:border-emerald-500/50 dark:text-slate-200 transition-all">
+          <option value="ALL">Todos Estados</option>
+          <option value="COMPLETED">Concluído</option>
+          <option value="PENDING">Processando</option>
+          <option value="CANCELLED">Estornado</option>
+        </select>
+      </div>
+
+      <!-- Clear button -->
+      <div class="flex items-end">
+        <button (click)="clearFilters()"
+          class="w-full sm:w-auto px-6 py-2.5 rounded-md text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-rose-500 hover:bg-rose-500/5 transition-all">
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- List container Precision -->
+  <div class="precision-card overflow-hidden">
+
+    <!-- Search bar Precision -->
+    <div class="px-6 py-5 border-b border-slate-50 dark:border-slate-800/60 bg-slate-50/30 dark:bg-slate-950/30 flex items-center gap-4">
+      <div class="flex items-center flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-3 gap-3 focus-within:border-emerald-500/30 transition-all">
+        <span class="material-icons-outlined text-slate-400 text-lg">search</span>
+        <input formControlName="search" type="text" placeholder="BUSCAR POR REFERÊNCIA..."
+          class="bg-transparent border-none focus:ring-0 text-[10px] flex-1 outline-none dark:text-slate-100 dark:placeholder-slate-600 font-black uppercase tracking-[0.1em]">
+        <button *ngIf="filterForm.value.search" (click)="filterForm.patchValue({search:''})"
+          class="text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
+          <span class="material-icons-outlined text-sm">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="p-20 flex flex-col items-center gap-4 text-slate-400">
+      <div class="w-10 h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+        <div class="h-full bg-emerald-500 animate-[loadingLine_1s_infinite]"></div>
+      </div>
+      <p class="text-[8px] font-black uppercase tracking-[0.3em] opacity-40">Sincronizando Dados...</p>
+    </div>
+
+    <!-- Transactions List -->
+    <div *ngIf="!isLoading">
+      <ng-container *ngIf="filtered$ | async as transactions">
+
+        <!-- Empty state -->
+        <div *ngIf="transactions.length === 0" class="py-24 flex flex-col items-center gap-4 text-slate-300">
+          <span class="material-icons-outlined text-6xl opacity-10">receipt_long</span>
+          <p class="text-[10px] font-black uppercase tracking-widest">Nenhum registro localizado</p>
+          <button *ngIf="hasActiveFilters" (click)="clearFilters()"
+            class="text-[9px] text-emerald-500 font-black uppercase tracking-widest px-4 py-2 border border-emerald-500/30 rounded mt-4 hover:bg-emerald-500/5">Resetar Filtros</button>
+        </div>
+
+        <!-- List rows Precision -->
+        <div *ngIf="transactions.length > 0" class="divide-y border-t border-slate-50 dark:border-slate-800/80 divide-slate-50 dark:divide-slate-800/50">
+          <div *ngFor="let t of transactions; let iT = index" (click)="editTransaction(t)"
+            class="p-4 sm:p-6 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-all flex items-center justify-between cursor-pointer group stagger"
+            [ngStyle]="{'animation-delay': (0.1 + iT * 0.05) + 's'}">
+
+            <!-- Left: Icon + Text -->
+            <div class="flex items-center gap-5 flex-1 min-w-0">
+              <div class="w-12 h-12 rounded bg-slate-900 border border-slate-800 flex items-center justify-center flex-shrink-0 group-hover:scale-95 transition-all"
+                  [ngClass]="t.type === 'INCOME' ? 'text-emerald-400' : 'text-slate-500'">
+                <span class="material-icons-outlined text-xl">
+                  {{ t.type === 'INCOME' ? 'add' : 'remove' }}
+                </span>
+              </div>
+              <div class="flex flex-col min-w-0 gap-1.5">
+                <span class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tighter truncate group-hover:text-emerald-500 transition-colors">{{ t.description }}</span>
+                <div class="flex items-center gap-2">
+                   <span class="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{{ t.date | date:'dd MMM, yyyy' }}</span>
+                   <span class="w-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full"></span>
+                   <span class="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest truncate">{{ t.categoryName || 'SEM CLASSIFICAÇÃO' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Value + Status -->
+            <div class="flex flex-col items-end flex-shrink-0 ml-4 gap-2">
+              <span class="text-sm sm:text-lg font-black font-mono tracking-tighter"
+                [class.text-emerald-500]="t.type === 'INCOME'"
+                [class.text-slate-900]="t.type !== 'INCOME' && !(isDarkTheme$ | async)"
+                [class.text-slate-200]="(isDarkTheme$ | async) && t.type !== 'INCOME'">
+                {{ t.type === 'EXPENSE' ? '−' : '+' }}{{ t.amount | currency:settingsService.currency }}
+              </span>
+              <span class="px-2 py-0.5 rounded-sm text-[7px] font-black uppercase tracking-[0.2em] border border-current"
+                [ngClass]="getStatusClass(t.status)">
+                {{ getStatusLabel(t.status) }}
+              </span>
+            </div>
+            
+            <span class="material-icons-outlined text-slate-200 dark:text-slate-800 ml-6 group-hover:text-emerald-500 transition-all group-hover:translate-x-1 hidden sm:block">arrow_forward</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,113 @@
+<div class="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+  <!-- Dynamic Background Grid -->
+  <div class="absolute inset-0 opacity-20 pointer-events-none" 
+    style="background-image: linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px); background-size: 40px 40px;">
+  </div>
+  
+  <div class="max-w-md w-full relative z-10 reveal-up">
+    <!-- Branding -->
+    <div class="flex flex-col mb-12">
+      <div class="inline-flex items-center gap-3 mb-6">
+        <div class="h-1px w-12 bg-emerald-500"></div>
+        <span class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500">FinControl / Precision System</span>
+      </div>
+      <h1 class="title-technical text-5xl text-white mb-2 leading-none">
+        Criar <br/> <span class="text-emerald-500">Credencial</span>
+      </h1>
+      <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-2">Expansão da Malha Financeira</p>
+    </div>
+
+    <!-- Register Panel -->
+    <div class="precision-card bg-slate-900/40 backdrop-blur-2xl p-10 border-white/5 shadow-2xl relative group">
+      <!-- Technical Corner Accents -->
+      <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-emerald-500/30 rounded-tr-lg"></div>
+      <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-emerald-500/30 rounded-bl-lg"></div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        
+        <div *ngIf="error" class="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-[10px] font-black uppercase tracking-widest rounded-lg animate-reveal-in">
+          <span class="material-icons-outlined text-sm mr-2 align-middle">error_outline</span>
+          {{ error }}
+        </div>
+
+        <div class="space-y-3">
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Nome Operacional</label>
+          <div class="relative group">
+            <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-emerald-500 transition-colors">badge</span>
+            <input 
+              type="text" 
+              formControlName="name"
+              placeholder="Ex: Operador Alpha"
+              class="w-full bg-slate-950/50 border border-white/5 text-white rounded-lg py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-slate-700"
+            >
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Identificador (Email)</label>
+          <div class="relative group">
+            <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-emerald-500 transition-colors">alternate_email</span>
+            <input 
+              type="email" 
+              formControlName="email"
+              placeholder="user@fincontrol.system"
+              class="w-full bg-slate-950/50 border border-white/5 text-white rounded-lg py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-slate-700"
+            >
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-3">
+            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocolo (Senha)</label>
+            <div class="relative group">
+              <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-emerald-500 transition-colors">key</span>
+              <input 
+                type="password" 
+                formControlName="password"
+                placeholder="••••••••"
+                class="w-full bg-slate-950/50 border border-white/5 text-white rounded-lg py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-slate-700"
+              >
+            </div>
+          </div>
+          <div class="space-y-3">
+            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Confirmar</label>
+            <div class="relative group">
+              <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-emerald-500 transition-colors">verified_user</span>
+              <input 
+                type="password" 
+                formControlName="confirmPassword"
+                placeholder="••••••••"
+                class="w-full bg-slate-950/50 border border-white/5 text-white rounded-lg py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-slate-700"
+              >
+            </div>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          [disabled]="registerForm.invalid || loading"
+          class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-[0.2em] text-[10px] py-5 rounded-lg shadow-2xl active:scale-[0.98] transition-all disabled:opacity-20 flex items-center justify-center gap-3 group/btn mt-4"
+        >
+          <span *ngIf="loading" class="material-icons-outlined animate-spin text-sm">sync</span>
+          <span *ngIf="!loading" class="material-icons-outlined text-sm group-hover/btn:translate-x-1 transition-transform">how_to_reg</span>
+          {{ loading ? 'Sincronizando...' : 'Gerar Credencial' }}
+        </button>
+      </form>
+
+      <div class="mt-8 pt-6 border-t border-white/5 flex flex-col gap-4">
+        <p class="text-slate-500 text-[9px] font-black uppercase tracking-widest text-center">
+          Credencial Existente? 
+          <a routerLink="/auth/login" class="text-emerald-500 hover:text-emerald-400 font-black ml-1 transition-colors">Conectar Terminal</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative technical element -->
+  <div class="absolute bottom-12 right-12 hidden lg:block">
+    <div class="flex flex-col items-end gap-2">
+      <div class="h-px w-32 bg-slate-800"></div>
+      <div class="font-mono text-[8px] text-slate-700 uppercase tracking-tighter">Global Financial Grid / Node Creation: Pending</div>
+    </div>
+  </div>
+</div>

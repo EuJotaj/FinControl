@@ -1,0 +1,80 @@
+<div aria-label="Cards" class="h-full mt-24 px-6 pb-24 md:pb-8 md:pl-24 max-w-7xl mx-auto flex flex-col gap-8 reveal-up" *ngIf="cards$ | async as cards; else loading">
+  <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-6">
+    <div>
+      <h1 class="title-technical text-4xl text-slate-900 dark:text-white">
+        Meus <span class="text-emerald-500">Cartões</span>
+      </h1>
+      <p class="mt-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+        Gerencie seus limites e faturas recorrentes
+      </p>
+    </div>
+    <button (click)="openAddCard()" class="px-6 py-2.5 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 font-black uppercase tracking-widest text-[10px] rounded-lg shadow-lg hover:bg-emerald-500 dark:hover:bg-emerald-400 transition-all flex items-center gap-2 group">
+      <span class="material-icons-outlined text-sm group-hover:scale-110 transition-transform">add</span>
+      Novo Cartão
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-4">
+    <div *ngFor="let card of cards; let i = index" 
+      class="flex flex-col gap-4 reveal-in"
+      [ngStyle]="{'animation-delay': (0.2 + i * 0.1) + 's'}">
+      
+      <!-- Visual Card (Technical Version) -->
+      <div class="h-48 rounded-xl p-8 text-white relative overflow-hidden shadow-2xl transition-all duration-500 hover:-translate-y-1 group" 
+        [style.backgroundColor]="card.color">
+        
+        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50"></div>
+        
+        <div class="flex justify-between items-start relative z-10">
+          <span class="text-sm font-black uppercase tracking-widest opacity-80">{{ card.bank }}</span>
+          <div class="flex gap-1">
+            <div class="w-8 h-6 bg-white/20 rounded-sm"></div>
+            <div class="w-8 h-6 bg-white/10 rounded-sm"></div>
+          </div>
+        </div>
+
+        <div class="mt-12 relative z-10">
+          <p class="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1">Card Number</p>
+          <p class="text-xl font-mono tracking-[0.2em]">•••• •••• •••• {{ card.lastDigits }}</p>
+        </div>
+
+        <!-- Abstract Grid Overlay -->
+        <div class="absolute inset-0 opacity-10" 
+          style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;">
+        </div>
+      </div>
+
+      <!-- Precision Stats Card -->
+      <div class="precision-card p-6 flex flex-col gap-4">
+        <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400">
+          <span>Uso do Limite</span>
+          <span class="text-slate-900 dark:text-white">{{ getPercentage(card.used, card.limit) | number:'1.0-0' }}%</span>
+        </div>
+
+        <div class="w-full bg-slate-100 dark:bg-slate-800/50 h-1 rounded-full overflow-hidden">
+          <div class="h-full bg-emerald-500 transition-all duration-1000" 
+            [style.width.%]="getPercentage(card.used, card.limit)"
+            [style.backgroundColor]="card.color"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mt-2 pt-4 border-t border-slate-100 dark:border-slate-800/50">
+          <div>
+            <p class="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-1">Utilizado</p>
+            <p class="text-sm font-black text-slate-900 dark:text-white">{{ card.used | currency:'BRL' }}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-1">Disponível</p>
+            <p class="text-sm font-black text-emerald-500">{{ card.limit - card.used | currency:'BRL' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="flex flex-col items-center justify-center h-64 mt-24">
+    <div class="w-8 h-8 border-2 border-slate-200 border-t-emerald-500 rounded-full animate-spin"></div>
+    <p class="mt-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Processando cartões...</p>
+  </div>
+</ng-template>

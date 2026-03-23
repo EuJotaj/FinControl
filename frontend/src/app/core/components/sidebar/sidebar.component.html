@@ -1,0 +1,214 @@
+<div class="h-full flex flex-col bg-white dark:bg-slate-950 border-r border-slate-100 dark:border-white/5 relative overflow-hidden">
+  
+  <!-- Technical Decoration -->
+  <div class="absolute top-0 right-0 w-px h-full bg-gradient-to-bottom from-transparent via-emerald-500/20 to-transparent"></div>
+
+  <!-- Branding Section -->
+  <div class="px-6 py-8 border-b border-slate-100 dark:border-white/5">
+    <div class="flex items-center gap-4 group cursor-pointer">
+      <div class="w-10 h-10 rounded-lg bg-slate-900 dark:bg-slate-50 flex items-center justify-center text-white dark:text-slate-900 font-black text-lg shadow-2xl border border-emerald-500/20 group-hover:scale-105 transition-transform">
+        F
+      </div>
+      <div class="flex flex-col">
+        <span class="text-xl font-black tracking-tighter uppercase dark:text-white leading-none">FinControl</span>
+        <span class="text-[8px] font-black uppercase tracking-[0.3em] text-emerald-500 mt-1">Precision System</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workspace Selector Section -->
+  <div class="px-4 py-4 mb-2 border-b border-slate-100 dark:border-white/5 bg-slate-50/30 dark:bg-white/5">
+    <div class="relative group">
+      <button class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 shadow-sm hover:border-emerald-500/50 transition-all outline-none">
+        <div class="flex items-center gap-3 overflow-hidden">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-xs font-black shadow-lg shadow-emerald-500/20">
+            {{ (currentWorkspace$ | async)?.name?.charAt(0) || 'W' }}
+          </div>
+          <div class="flex flex-col items-start overflow-hidden">
+            <span class="text-[10px] font-black uppercase tracking-tight text-slate-800 dark:text-white truncate w-full">
+              {{ (currentWorkspace$ | async)?.name || 'Carregando...' }}
+            </span>
+            <span class="text-[7px] font-black text-emerald-500 uppercase tracking-[0.2em] mt-0.5">
+              {{ (currentWorkspace$ | async)?.planName || 'FREE PLAN' }}
+            </span>
+          </div>
+        </div>
+        <span class="material-icons-outlined text-sm text-slate-400 group-hover:text-emerald-500 transition-colors">unfold_more</span>
+      </button>
+
+      <!-- Dropdown Menu -->
+      <div class="absolute left-0 top-full pt-2 w-full hidden group-hover:block z-50 animate-in fade-in zoom-in-95 duration-200">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl py-3 overflow-hidden">
+          <div class="px-4 pb-2 mb-2 border-b border-slate-100 dark:border-white/5">
+            <p class="text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">
+              Meus Workspaces
+            </p>
+          </div>
+          
+          <div class="max-h-60 overflow-y-auto no-scrollbar px-2 space-y-1">
+            <button *ngFor="let ws of workspaces$ | async" 
+                    (click)="switchWorkspace(ws)"
+                    [class.bg-slate-50]="(currentWorkspace$ | async)?.id === ws.id"
+                    [class.dark:bg-white/5]="(currentWorkspace$ | async)?.id === ws.id"
+                    class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all group/item">
+              <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[10px] font-black text-slate-500 group-hover/item:text-emerald-500 transition-colors">
+                {{ ws.name.charAt(0) }}
+              </div>
+              <div class="flex flex-col items-start text-left truncate">
+                <span class="text-[10px] font-black text-slate-800 dark:text-white uppercase tracking-tight truncate">{{ ws.name }}</span>
+                <span class="text-[7px] font-bold text-slate-400 uppercase tracking-widest">{{ ws.planName }}</span>
+              </div>
+              
+              <div class="ml-auto flex items-center gap-2">
+                <button *ngIf="ws.name !== 'Default'"
+                        (click)="removeWorkspace($event, ws)" 
+                        class="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all opacity-0 group-hover/item:opacity-100">
+                  <span class="material-icons-outlined text-sm">delete</span>
+                </button>
+                <div *ngIf="(currentWorkspace$ | async)?.id === ws.id" class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50"></div>
+              </div>
+            </button>
+          </div>
+
+          <div class="px-3 pt-3 mt-2 border-t border-slate-100 dark:border-white/5">
+            <button (click)="openCreateModal()"
+                    class="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-emerald-500 hover:bg-emerald-500/10 transition-all border border-transparent hover:border-emerald-500/20">
+              <span class="material-icons text-base">add_box</span>
+              <span class="text-[9px] font-black uppercase tracking-widest">Criar Workspace</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Grid -->
+  <nav class="flex-1 px-4 py-8 space-y-1 overflow-y-auto no-scrollbar">
+
+    <div class="mb-6">
+      <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 px-3 mb-4 flex items-center gap-2">
+        <span class="w-1 h-1 bg-emerald-500 rounded-full"></span>
+        {{ 'nav.section.main' | translate }}
+      </p>
+
+      <div class="space-y-1">
+        <a routerLink="/dashboard" routerLinkActive="!bg-slate-900 dark:!bg-slate-50 !text-white dark:!text-slate-900 shadow-xl"
+           class="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-all reveal-in">
+          <span class="material-icons-outlined text-base">grid_view</span>
+          {{ 'nav.dashboard' | translate }}
+        </a>
+
+        <a routerLink="/transactions" routerLinkActive="!bg-slate-900 dark:!bg-slate-50 !text-white dark:!text-slate-900 shadow-xl"
+           class="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-all reveal-in">
+          <span class="material-icons-outlined text-base">account_balance_wallet</span>
+          {{ 'nav.transactions' | translate }}
+        </a>
+        
+        <a routerLink="/cards" routerLinkActive="!bg-slate-900 dark:!bg-slate-50 !text-white dark:!text-slate-900 shadow-xl"
+           class="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-all reveal-in">
+          <span class="material-icons-outlined text-base">credit_card</span>
+          {{ 'nav.cards' | translate }}
+        </a>
+
+        <a routerLink="/invoices" routerLinkActive="!bg-slate-900 dark:!bg-slate-50 !text-white dark:!text-slate-900 shadow-xl"
+           class="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-all reveal-in">
+          <span class="material-icons-outlined text-base">request_quote</span>
+          {{ 'nav.invoices' | translate }}
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 px-3 mb-4 flex items-center gap-2">
+        <span class="w-1 h-1 bg-emerald-500 rounded-full"></span>
+        {{ 'nav.section.manage' | translate }}
+      </p>
+
+      <div class="space-y-1">
+        <a routerLink="/billing" routerLinkActive="!bg-emerald-500 !text-white shadow-lg shadow-emerald-500/20"
+           class="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest rounded-lg text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all reveal-in">
+          <span class="material-icons-outlined text-base">workspace_premium</span>
+          {{ 'nav.billing' | translate }}
+        </a>
+
+        <a routerLink="/subscriptions" routerLinkActive="!bg-slate-900 dark:!bg-slate-50 !text-white dark:!text-slate-900 shadow-xl"
+           class="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-all reveal-in">
+          <span class="material-icons-outlined text-base">autorenew</span>
+          {{ 'nav.subscriptions' | translate }}
+        </a>
+
+        <a routerLink="/categories" routerLinkActive="!bg-slate-900 dark:!bg-slate-50 !text-white dark:!text-slate-900 shadow-xl"
+           class="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-all reveal-in">
+          <span class="material-icons-outlined text-base">inventory_2</span>
+          {{ 'nav.categories' | translate }}
+        </a>
+
+        <a routerLink="/settings" routerLinkActive="!bg-slate-900 dark:!bg-slate-50 !text-white dark:!text-slate-900 shadow-xl"
+           class="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-all reveal-in">
+          <span class="material-icons-outlined text-base">settings_input_component</span>
+          {{ 'nav.settings' | translate }}
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- User Identity Section -->
+  <div class="px-4 mb-6">
+    <a routerLink="/profile" *ngIf="currentUser$ | async as user"
+       class="p-4 rounded-xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5 flex items-center gap-3 hover:border-emerald-500/30 transition-all group reveal-up">
+      <div class="w-10 h-10 rounded-lg bg-slate-900 dark:bg-slate-100 flex items-center justify-center text-white dark:text-slate-900 text-xs font-black shadow-lg border border-emerald-500/20 group-hover:border-emerald-500 transition-colors">
+        {{ getInitials(user.name) }}
+      </div>
+      <div class="flex-1 truncate">
+        <p class="text-[10px] font-black dark:text-white uppercase tracking-tight truncate">{{ user.name }}</p>
+        <p class="text-[8px] font-black text-emerald-500 uppercase tracking-widest truncate">{{ 'common.role_user' | translate }}</p>
+      </div>
+      <span class="material-icons-outlined text-sm text-slate-400 group-hover:text-emerald-500 transition-colors">navigate_next</span>
+    </a>
+  </div>
+
+</div>
+
+<!-- Creation Modal -->
+<div *ngIf="showCreateModal$ | async" 
+     class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/20 backdrop-blur-sm animate-in fade-in duration-300">
+  <div (click)="closeCreateModal()" class="absolute inset-0"></div>
+  
+  <div class="relative w-full max-w-md mx-4 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in zoom-in-95 duration-300">
+    <!-- Header -->
+    <div class="px-8 pt-8 pb-4">
+      <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-6">
+        <span class="material-icons text-2xl">add_business</span>
+      </div>
+      <h3 class="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Novo Workspace</h3>
+      <p class="text-xs text-slate-400 mt-1 uppercase tracking-widest font-bold">Crie um novo espaço para gerenciar suas finanças.</p>
+    </div>
+
+    <!-- Body -->
+    <div class="px-8 py-4">
+      <div class="space-y-4">
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2 block">Nome do Workspace</label>
+          <input type="text" 
+                 [(ngModel)]="newWorkspaceName"
+                 placeholder="Ex: Pessoal, Empresa, Investimentos..."
+                 class="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all font-bold">
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-8 pb-8 pt-4 flex gap-3">
+      <button (click)="closeCreateModal()"
+              class="flex-1 px-6 py-3 rounded-2xl border border-slate-200 dark:border-white/10 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+        Cancelar
+      </button>
+      <button (click)="onCreateWorkspace()"
+              [disabled]="!newWorkspaceName.trim() || isCreating"
+              class="flex-1 px-6 py-3 rounded-2xl bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:scale-100 transition-all flex items-center justify-center gap-2">
+        <span *ngIf="isCreating" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+        {{ isCreating ? 'Criando...' : 'Criar Agora' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<form [formGroup]="categoryForm" (ngSubmit)="save()" class="space-y-4">
+  <div class="space-y-1">
+    <label class="text-xs font-bold uppercase text-slate-500">Nome da Categoria</label>
+    <input type="text" formControlName="name" placeholder="Ex: Viagens, Presentes..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-light outline-none dark:text-white transition-all">
+  </div>
+  <div class="space-y-1">
+    <label class="text-xs font-bold uppercase text-slate-500">Tipo</label>
+    <select formControlName="type" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-light outline-none dark:text-white transition-all">
+      <option value="EXPENSE">Despesa</option>
+      <option value="INCOME">Receita</option>
+    </select>
+  </div>
+  
+  <div class="space-y-2">
+    <label class="text-xs font-bold uppercase text-slate-500">Cor e Ícone</label>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button type="button" *ngFor="let color of colors" 
+              (click)="categoryForm.get('color')?.setValue(color)"
+              class="w-6 h-6 rounded-full border-2 transition-all"
+              [style.backgroundColor]="color"
+              [class.border-white]="categoryForm.get('color')?.value === color"
+              [class.border-transparent]="categoryForm.get('color')?.value !== color"></button>
+    </div>
+    <div class="grid grid-cols-5 gap-2">
+      <button type="button" *ngFor="let icon of icons" 
+              (click)="categoryForm.get('icon')?.setValue(icon)"
+              class="p-2 border rounded-lg flex items-center justify-center transition-all bg-slate-50 dark:bg-slate-900"
+              [class.border-primary-light]="categoryForm.get('icon')?.value === icon"
+              [class.border-slate-200]="categoryForm.get('icon')?.value !== icon">
+        <span class="material-icons-outlined text-sm" [style.color]="categoryForm.get('color')?.value">{{ icon }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex gap-3 pt-4">
+    <button type="button" (click)="cancel()" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-bold text-slate-500">Cancelar</button>
+    <button type="submit" [disabled]="categoryForm.invalid" class="flex-1 px-4 py-3 rounded-xl bg-primary-light text-white text-sm font-bold shadow-lg shadow-primary-light/20">Salvar Categoria</button>
+  </div>
+</form>

@@ -1,0 +1,55 @@
+<form [formGroup]="invoiceForm" (ngSubmit)="save()" class="space-y-4">
+  <div class="space-y-1">
+    <label class="text-xs font-bold uppercase text-slate-500">Descrição</label>
+    <input type="text" formControlName="description" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-light outline-none dark:text-white transition-all">
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div class="space-y-1">
+      <label class="text-xs font-bold uppercase text-slate-500">Valor</label>
+      <input type="number" formControlName="amount" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-light outline-none dark:text-white transition-all">
+    </div>
+    <div class="space-y-1">
+      <label class="text-xs font-bold uppercase text-slate-500">Vencimento</label>
+      <input type="date" formControlName="dueDate" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-light outline-none dark:text-white transition-all">
+    </div>
+  </div>
+  <div class="space-y-1">
+    <label class="text-xs font-bold uppercase text-slate-500">Cartão de Crédito (Opcional)</label>
+    <select formControlName="cardId" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-light outline-none dark:text-white transition-all">
+      <option value="">Nenhum</option>
+      <ng-container *ngIf="cards$ | async as cards">
+        <option *ngFor="let card of cards" [value]="card.id">{{ card.bank }} (Final {{ card.lastDigits }})</option>
+      </ng-container>
+    </select>
+  </div>
+  <div class="flex flex-col gap-3 pt-4">
+    <div *ngIf="isActionMode" class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 space-y-2">
+      <div class="flex justify-between items-center text-sm">
+        <span class="text-slate-500 font-medium">Status Atual:</span>
+        <span class="font-black px-3 py-1 rounded-lg text-xs uppercase" 
+          [class.bg-emerald-100]="selectedInvoice?.status === 'PAID'"
+          [class.text-emerald-600]="selectedInvoice?.status === 'PAID'"
+          [class.bg-amber-100]="selectedInvoice?.status === 'UNPAID'"
+          [class.text-amber-600]="selectedInvoice?.status === 'UNPAID'">
+          {{ selectedInvoice?.status }}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex gap-3">
+      <button type="button" (click)="cancel()" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-bold text-slate-500">
+        {{ isActionMode ? 'Fechar' : 'Cancelar' }}
+      </button>
+      
+      <button type="submit" [disabled]="invoiceForm.invalid" class="flex-1 px-4 py-3 rounded-xl bg-primary-light text-white text-sm font-bold shadow-lg shadow-primary-light/20">
+        {{ isActionMode ? 'Atualizar Fatura' : 'Salvar Fatura' }}
+      </button>
+
+      <button *ngIf="isActionMode && selectedInvoice?.status !== 'PAID'" type="button" (click)="pay()" 
+        class="flex-1 px-4 py-3 rounded-xl bg-emerald-500 text-white text-sm font-black shadow-lg shadow-emerald-500/20 active:scale-95 transition-transform flex items-center justify-center gap-2">
+        <span class="material-icons-outlined text-base">check_circle</span>
+        PAGAR AGORA
+      </button>
+    </div>
+  </div>
+</form>

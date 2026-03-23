@@ -1,0 +1,77 @@
+<!-- DESIGN RULE: FinControl Precision (Technical Premium) -->
+<div aria-label="Team Members" class="py-12 px-6 max-w-5xl mx-auto h-full reveal-up">
+  
+  <!-- Precision Header -->
+  <div class="mb-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+    <div class="flex-1">
+       <span class="inline-block px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[8px] font-black uppercase tracking-[0.2em] mb-4 rounded-sm border border-slate-200 dark:border-slate-700">
+         Settings / Workspace / Members
+       </span>
+       <h1 class="text-5xl font-black text-slate-900 dark:text-white leading-[0.85] tracking-tighter uppercase relative">
+         {{ 'settings.team_title' | translate | slice:0:6 }}<br/>
+         <span class="text-emerald-500">{{ 'settings.team_title' | translate | slice:6 }}</span>
+         <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-12 bg-emerald-500 rounded-full hidden md:block"></div>
+       </h1>
+       <p class="mt-6 text-sm text-slate-500 dark:text-slate-400 max-w-md font-medium leading-relaxed">
+         {{ 'settings.team_subtitle' | translate }} <strong class="text-slate-900 dark:text-emerald-400">{{ (currentWorkspace$ | async)?.name }}</strong>.
+       </p>
+    </div>
+    
+    <!-- Action Button Precision -->
+    <button (click)="inviteMember()" 
+      class="group relative w-full md:w-auto px-10 py-4 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 font-black uppercase tracking-widest text-[10px] transition-all hover:bg-emerald-500 dark:hover:bg-emerald-400 rounded-lg shadow-xl shadow-emerald-500/10">
+      + {{ 'settings.team_invite' | translate }}
+    </button>
+  </div>
+
+  <!-- The Roster (List of members) -->
+  <div class="grid grid-cols-1 gap-4">
+     <div *ngFor="let member of members; let i = index" 
+       class="precision-card p-5 group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 reveal-in"
+       [ngStyle]="{'animation-delay': (0.2 + i * 0.1) + 's'}">
+       
+       <!-- Left side: Identity -->
+       <div class="flex items-center gap-6">
+          <!-- Precision Avatar Bubble -->
+          <div class="w-14 h-14 bg-slate-900 dark:bg-slate-800 flex items-center justify-center text-white dark:text-emerald-400 font-black text-xl rounded-lg border border-emerald-500/20 shadow-inner group-hover:scale-105 transition-transform duration-500">
+            {{ member.initials }}
+          </div>
+          
+          <div>
+            <h3 class="text-base font-black text-slate-900 dark:text-white uppercase tracking-tighter leading-none group-hover:text-emerald-500 transition-colors">{{ member.name }}</h3>
+            <p class="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest mt-1.5">{{ member.email }}</p>
+          </div>
+       </div>
+
+       <!-- Right side: Status & Actions -->
+       <div class="flex items-center justify-between sm:justify-end gap-10 w-full sm:w-auto">
+          <div class="flex flex-col items-start sm:items-end gap-1.5">
+            <!-- Role Badge Precision -->
+            <span class="px-2 py-0.5 text-[8px] font-black uppercase tracking-widest border border-current rounded-sm"
+              [ngClass]="{
+                'border-rose-500/30 text-rose-500': member.role === 'OWNER',
+                'border-emerald-500/30 text-emerald-500': member.role === 'ADMIN',
+                'border-slate-300 dark:border-slate-700 text-slate-400': member.role === 'MEMBER'
+              }">
+              {{ member.role }}
+            </span>
+            
+            <!-- Status text -->
+            <span class="text-[9px] uppercase font-black tracking-widest text-slate-400 flex items-center gap-1.5">
+              <span *ngIf="member.status === 'ACTIVE'" class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+              <span *ngIf="member.status === 'INVITED'" class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+              {{ member.status === 'ACTIVE' ? ('settings.team_active' | translate) : ('settings.team_awaiting' | translate) }}
+            </span>
+          </div>
+          
+          <!-- Actions menu button Precision -->
+          <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-100 dark:border-slate-800 text-slate-400 hover:bg-slate-900 dark:hover:bg-slate-50 hover:text-white dark:hover:text-slate-900 transition-all group/btn"
+              title="Ações" *ngIf="member.role !== 'OWNER'">
+            <span class="material-icons-outlined text-lg group-hover/btn:rotate-90 transition-transform">more_vert</span>
+          </button>
+       </div>
+       
+     </div>
+  </div>
+
+</div>

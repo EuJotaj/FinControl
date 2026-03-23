@@ -1,0 +1,13 @@
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\index.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\app.component.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\core\components\sidebar\sidebar.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\core\components\topbar\topbar.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\features\admin\admin.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\features\auth\login\login.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\features\auth\register\register.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\features\cards\cards.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\features\categories\categories.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\features\dashboard\dashboard.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\features\invoices\invoices.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\features\subscriptions\subscriptions.html
+C:\Users\janil\Desktop\gerenciador-financeiro-pessoal\frontend\src\app\features\transactions\transactions.html

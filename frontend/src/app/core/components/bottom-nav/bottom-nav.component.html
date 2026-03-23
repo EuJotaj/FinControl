@@ -1,0 +1,59 @@
+<!-- 
+  MOBILE DESIGN COMMITMENT: 
+  - Thumb-zone optimized action
+  - No standard bottom tabs (we're going Brutalist iOS)
+  - Hard borders, acid green/indigo brutalist shadows.
+-->
+<div class="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white dark:bg-slate-900 border-t-2 border-slate-900 dark:border-slate-100 pb-safe shadow-[0_-4px_0_0_rgba(15,23,42,1)] dark:shadow-[0_-4px_0_0_rgba(255,255,255,0.1)]">
+  <div class="flex items-center justify-between px-2 h-16 relative">
+    
+    <!-- Left side navs -->
+    <div class="flex-1 flex justify-evenly h-full">
+      <button *ngFor="let item of navItems.slice(0, 2)" 
+        (click)="navigate(item.route)"
+        class="flex flex-col items-center justify-center w-full h-full gap-1 transition-colors relative"
+        [ngClass]="isActive(item.route) ? 'text-indigo-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'">
+        
+        <span class="material-icons-outlined text-[24px]" 
+              [class.font-black]="isActive(item.route)"
+              [class.scale-110]="isActive(item.route)">
+          {{ item.icon }}
+        </span>
+        <span class="text-[10px] font-bold uppercase tracking-wider" *ngIf="isActive(item.route)">
+          {{ item.label | translate }}
+        </span>
+        <!-- Active indicator brutally simple -->
+        <div *ngIf="isActive(item.route)" class="absolute top-0 right-1/2 translate-x-1/2 w-4 h-[3px] bg-indigo-600 dark:bg-emerald-400"></div>
+      </button>
+    </div>
+
+    <!-- CENTER HUGE FAB (Thumb Zone Hero) -->
+    <div class="relative shrink-0 flex items-center justify-center px-2">
+      <button (click)="openAddTransaction()"
+        class="absolute -top-10 flex items-center justify-center w-16 h-16 bg-emerald-500 text-slate-900 border-2 border-slate-900 dark:border-slate-100 shadow-[4px_4px_0_0_rgba(15,23,42,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] hover:bg-emerald-400 transition-transform active:scale-95 active:shadow-[2px_2px_0_0_rgba(15,23,42,1)]"
+        style="border-radius: 0px; transform: rotate(-3deg);">
+        <span class="material-icons-outlined text-4xl font-black">add</span>
+      </button>
+    </div>
+
+    <!-- Right side navs -->
+    <div class="flex-1 flex justify-evenly h-full">
+      <button *ngFor="let item of navItems.slice(2, 4)" 
+        (click)="navigate(item.route)"
+        class="flex flex-col items-center justify-center w-full h-full gap-1 transition-colors relative"
+        [ngClass]="isActive(item.route) ? 'text-indigo-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'">
+        
+        <span class="material-icons-outlined text-[24px]" 
+              [class.font-black]="isActive(item.route)"
+              [class.scale-110]="isActive(item.route)">
+          {{ item.icon }}
+        </span>
+        <span class="text-[10px] font-bold uppercase tracking-wider" *ngIf="isActive(item.route)">
+          {{ item.label | translate }}
+        </span>
+        <!-- Active indicator brutally simple -->
+        <div *ngIf="isActive(item.route)" class="absolute top-0 right-1/2 translate-x-1/2 w-4 h-[3px] bg-indigo-600 dark:bg-emerald-400"></div>
+      </button>
+    </div>
+  </div>
+</div>

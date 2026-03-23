@@ -1,0 +1,58 @@
+<!-- DESIGN RULE: FinControl Precision (Technical Premium) -->
+<div aria-label="Billing" class="h-full mt-24 px-6 pb-24 md:pb-8 md:pl-24 max-w-5xl mx-auto flex flex-col gap-8 reveal-up">
+  <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-6">
+    <div>
+      <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">
+        Assinaturas<br/>
+        <span class="text-emerald-500">& Planos</span>
+      </h1>
+      <p class="mt-4 text-xs font-black uppercase tracking-widest text-slate-400">
+        Gerencie o poder do seu Workspace
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+    <div *ngFor="let plan of plans; let i = index" 
+      class="precision-card p-8 flex flex-col justify-between reveal-in transition-all duration-500"
+      [ngClass]="{'border-emerald-500/40 ring-1 ring-emerald-500/10': !plan.active && plan.name === 'PRO'}"
+      [ngStyle]="{'animation-delay': (0.2 + i * 0.1) + 's'}">
+      
+      <div>
+        <div class="flex justify-between items-start">
+          <h2 class="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
+            {{ plan.name }}
+          </h2>
+          <span *ngIf="plan.name === 'PRO'" class="px-2 py-0.5 bg-emerald-500 text-white text-[8px] font-black uppercase tracking-widest rounded-sm">Popular</span>
+        </div>
+        
+        <p class="text-4xl font-black text-slate-900 dark:text-white mt-6 tracking-tighter">
+          {{ plan.price }}<span class="text-sm text-slate-400 font-medium tracking-normal ml-1">/mês</span>
+        </p>
+        
+        <ul class="mt-10 flex flex-col gap-4">
+          <li *ngFor="let f of plan.features" class="flex items-center gap-3 text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">
+            <span class="material-icons-outlined text-emerald-500 text-lg">check_circle</span>
+            {{ f }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="mt-12">
+        <button *ngIf="!plan.active" (click)="subscribe(plan.name)"
+          class="w-full py-4 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 font-black uppercase tracking-widest text-[10px] rounded-lg shadow-lg hover:bg-emerald-500 dark:hover:bg-emerald-400 transition-all flex items-center justify-center gap-3 group">
+          <span class="material-icons-outlined text-base group-hover:scale-110 transition-transform">bolt</span>
+          Assinar Agora
+        </button>
+
+        <div *ngIf="plan.active" class="py-4 font-black uppercase text-[10px] tracking-widest text-center text-emerald-500 bg-emerald-500/5 border border-emerald-500/20 rounded-lg">
+          Plano Atual
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-center text-[10px] text-slate-400 font-black uppercase tracking-widest mt-8">
+    Segurança garantida pelo <span class="text-slate-900 dark:text-slate-200">Mercado Pago</span>
+  </p>
+</div>

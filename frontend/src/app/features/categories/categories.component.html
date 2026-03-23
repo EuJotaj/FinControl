@@ -1,0 +1,63 @@
+<div aria-label="Categories" class="h-full mt-24 px-6 pb-24 md:pb-8 md:pl-24 max-w-7xl mx-auto flex flex-col gap-8 reveal-up">
+  <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-6">
+    <div>
+      <h1 class="title-technical text-4xl text-slate-900 dark:text-white">
+        Dicionário de <span class="text-emerald-500">Categorias</span>
+      </h1>
+      <p class="mt-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+        Engine de classificação e inteligência financeira
+      </p>
+    </div>
+    <button (click)="openAddCategory()" class="px-6 py-2.5 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 font-black uppercase tracking-widest text-[10px] rounded-lg shadow-lg hover:bg-emerald-500 dark:hover:bg-emerald-400 transition-all flex items-center gap-2 group">
+      <span class="material-icons-outlined text-sm group-hover:scale-110 transition-transform">add</span>
+      Nova Categoria
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-4">
+    <!-- Receitas -->
+    <div class="space-y-6">
+      <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 flex items-center gap-3">
+        <span class="w-12 h-px bg-emerald-500/30"></span>
+        Entradas / Receitas
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" *ngIf="incomeCategories$ | async as income; else loading">
+        <div *ngFor="let cat of income; let i = index" 
+          class="precision-card p-5 reveal-in flex items-center gap-4 group cursor-pointer hover:scale-[1.02] active:scale-95 transition-all duration-300"
+          [ngStyle]="{'animation-delay': (0.2 + i * 0.05) + 's'}">
+          <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-emerald-500/10 text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 shadow-inner"
+            [style.color]="cat.color" [style.backgroundColor]="cat.color + '10'">
+            <span class="material-icons-outlined text-xl">{{ cat.icon }}</span>
+          </div>
+          <span class="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white">{{ cat.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Despesas -->
+    <div class="space-y-6">
+      <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500 flex items-center gap-3">
+        <span class="w-12 h-px bg-rose-500/30"></span>
+        Saídas / Despesas
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" *ngIf="expenseCategories$ | async as expense; else loading">
+        <div *ngFor="let cat of expense; let i = index" 
+          class="precision-card p-5 reveal-in flex items-center gap-4 group cursor-pointer hover:scale-[1.02] active:scale-95 transition-all duration-300"
+          [ngStyle]="{'animation-delay': (0.2 + i * 0.05) + 's'}">
+          <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-rose-500/10 text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-all duration-500 shadow-inner"
+            [style.color]="cat.color" [style.backgroundColor]="cat.color + '10'">
+            <span class="material-icons-outlined text-xl">{{ cat.icon }}</span>
+          </div>
+          <span class="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white">{{ cat.name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="col-span-full py-24 flex flex-col items-center justify-center">
+    <div class="w-8 h-8 border-2 border-slate-200 border-t-emerald-500 rounded-full animate-spin"></div>
+    <p class="mt-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Classifying assets...</p>
+  </div>
+</ng-template>

@@ -1,0 +1,44 @@
+<div aria-label="App Layout" class="flex h-screen overflow-hidden text-text-light dark:text-text-dark font-sans selection:bg-primary-light selection:text-white"
+     [class.bg-background-light]="showLayout$ | async" [class.dark:bg-background-dark]="showLayout$ | async"
+     [class.bg-slate-950]="!(showLayout$ | async)">
+  
+  <!-- Sidebar Container -->
+  <aside *ngIf="showLayout$ | async" class="w-64 flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-card-light dark:bg-card-dark hidden md:block transition-all duration-300">
+    <app-sidebar></app-sidebar>
+  </aside>
+
+  <!-- Main Content wrapper -->
+  <div class="flex flex-col flex-1 overflow-hidden" [class.items-center]="!(showLayout$ | async)" [class.justify-center]="!(showLayout$ | async)">
+    
+    <header *ngIf="showLayout$ | async" class="h-16 flex-shrink-0 border-b border-slate-200 dark:border-slate-800 bg-card-light dark:bg-card-dark flex items-center px-4 transition-all duration-300">
+      <app-topbar class="flex-1 h-full flex items-center"></app-topbar>
+    </header>
+
+    <!-- Main scrollable area -->
+    <main class="flex-1 overflow-y-auto transition-all w-full relative" 
+          [class.md:pb-6]="showLayout$ | async" 
+          [class.pb-24]="showLayout$ | async" 
+          [class.pt-6]="showLayout$ | async" 
+          [class.px-6]="showLayout$ | async">
+      <!-- Routing Outlet -->
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <app-bottom-nav *ngIf="showLayout$ | async"></app-bottom-nav>
+  </div>
+
+<!-- Global Modals -->
+<app-shared-modal *ngIf="modalState$ | async as state">
+  <div [ngSwitch]="state.config?.type">
+    <app-transaction-form *ngSwitchCase="'transaction'"></app-transaction-form>
+    <app-invoice-form *ngSwitchCase="'invoice'"></app-invoice-form>
+    <app-subscription-form *ngSwitchCase="'subscription'"></app-subscription-form>
+    <app-category-form *ngSwitchCase="'category'"></app-category-form>
+    <app-card-form *ngSwitchCase="'card'"></app-card-form>
+    <div *ngSwitchDefault class="text-center py-8">
+      <p class="text-slate-500">Formulário em desenvolvimento...</p>
+    </div>
+  </div>
+</app-shared-modal>
+</div>

@@ -1,0 +1,40 @@
+<div *ngIf="modalState$ | async as state" 
+     class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6 transition-all"
+     [class.invisible]="!state.isOpen"
+     [class.pointer-events-none]="!state.isOpen">
+  
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity modal-backdrop"
+       (click)="onBackdropClick($event)"
+       [class.opacity-0]="!state.isOpen" 
+       [class.opacity-100]="state.isOpen"></div>
+
+  <!-- Modal Content -->
+  <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-[32px] sm:rounded-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)] sm:shadow-[4px_4px_0_0_rgba(15,23,42,1)] sm:border-2 sm:border-slate-900 dark:border-slate-100 relative z-10 transition-all duration-300 transform max-h-[92vh] flex flex-col"
+       [class.translate-y-full]="!state.isOpen"
+       [class.sm:scale-95]="!state.isOpen"
+       [class.sm:translate-y-0]="!state.isOpen"
+       [class.opacity-0]="!state.isOpen"
+       [class.translate-y-0]="state.isOpen"
+       [class.sm:scale-100]="state.isOpen"
+       [class.opacity-100]="state.isOpen">
+    
+    <!-- Mobile Drag Handle -->
+    <div class="w-full flex justify-center py-3 sm:hidden" (click)="close()">
+      <div class="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="px-6 py-4 border-b-2 border-slate-100 dark:border-slate-800 flex justify-between items-center sm:rounded-t-3xl">
+      <h3 class="text-xl font-black dark:text-white">{{ state.config?.title }}</h3>
+      <button (click)="close()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-transform active:scale-95 text-slate-400">
+        <span class="material-icons-outlined text-xl">close</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 overflow-y-auto flex-1">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

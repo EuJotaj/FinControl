@@ -1,0 +1,84 @@
+<div class="h-full mt-24 px-6 pb-24 md:pb-8 md:pl-24 max-w-7xl mx-auto flex flex-col gap-8 reveal-up" *ngIf="currentUser$ | async as user">
+  <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-6">
+    <div>
+      <h1 class="title-technical text-4xl text-slate-900 dark:text-white">
+        {{ 'profile.title' | translate | slice:0:10 }} <span class="text-emerald-500">{{ 'profile.operator' | translate }}</span>
+      </h1>
+      <p class="mt-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+        {{ 'profile.subtitle' | translate }}
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 mt-4">
+    <!-- Left: Profile Info -->
+    <div class="lg:col-span-2 space-y-8">
+      <div class="precision-card p-10">
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="space-y-8">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div class="space-y-3">
+              <label for="name" class="text-[10px] font-black uppercase tracking-widest text-slate-400">{{ 'profile.identity' | translate }}</label>
+              <input type="text" id="name" formControlName="name" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg px-5 py-3.5 text-sm font-medium focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none dark:text-white transition-all placeholder:text-slate-500">
+            </div>
+            <div class="space-y-3">
+              <label for="email" class="text-[10px] font-black uppercase tracking-widest text-slate-400">{{ 'profile.transmission_email' | translate }}</label>
+              <input type="email" id="email" formControlName="email" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg px-5 py-3.5 text-sm font-medium focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none dark:text-white transition-all placeholder:text-slate-500">
+            </div>
+            <div class="space-y-3">
+              <label for="phone" class="text-[10px] font-black uppercase tracking-widest text-slate-400">{{ 'profile.signal_phone' | translate }}</label>
+              <input type="text" id="phone" formControlName="phone" placeholder="(00) 00000-0000" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg px-5 py-3.5 text-sm font-medium focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none dark:text-white transition-all placeholder:text-slate-500">
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <label for="bio" class="text-[10px] font-black uppercase tracking-widest text-slate-400">{{ 'profile.briefing' | translate }}</label>
+            <textarea id="bio" formControlName="bio" rows="4" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg px-5 py-3.5 text-sm font-medium focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none dark:text-white transition-all resize-none placeholder:text-slate-500"></textarea>
+          </div>
+
+          <!-- Alerts (Precision Style) -->
+          <div *ngIf="saveSuccess" class="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-lg px-5 py-4 text-[10px] font-black uppercase tracking-widest animate-reveal-in">
+            <span class="material-icons-outlined text-base">check_circle</span>
+            {{ 'profile.protocol_saved' | translate }}
+          </div>
+          <div *ngIf="saveError" class="flex items-center gap-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-lg px-5 py-4 text-[10px] font-black uppercase tracking-widest animate-reveal-in">
+            <span class="material-icons-outlined text-base">error_outline</span>
+            {{ 'profile.save_error' | translate }}
+          </div>
+
+          <div class="pt-4">
+            <button type="submit" [disabled]="profileForm.invalid" class="w-full sm:w-auto px-10 py-4 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 font-black uppercase tracking-widest text-[10px] rounded-lg shadow-xl hover:bg-emerald-500 dark:hover:bg-emerald-400 transition-all disabled:opacity-30 disabled:grayscale">
+              {{ 'profile.sync' | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right: Photo & Account Status -->
+    <div class="space-y-8">
+      <div class="precision-card p-10 flex flex-col items-center">
+        <div class="relative group cursor-pointer mb-8" (click)="fileInput.click()">
+          <div class="w-32 h-32 rounded-lg overflow-hidden border-2 border-slate-200 dark:border-slate-800 shadow-2xl transition-all group-hover:border-emerald-500">
+            <img [src]="profilePic" alt="Profile Photo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+          </div>
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all bg-emerald-500/20 backdrop-blur-sm rounded-lg">
+            <span class="material-icons-outlined text-white text-3xl">upload</span>
+          </div>
+          <input #fileInput type="file" class="hidden" (change)="onFileChange($event)" accept="image/*">
+        </div>
+        
+        <h4 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tighter text-center">
+          {{ profileForm.get('name')?.value || user.name }}
+        </h4>
+        <p class="text-[9px] font-black uppercase tracking-[0.3em] text-emerald-500 mt-2">
+          {{ user.role === 'ADMIN' ? ('common.role_admin' | translate) : ('common.role_user' | translate) }}
+        </p>
+        
+        <div class="w-full mt-10 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-800 text-center">
+          <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ 'profile.link_status' | translate }}</p>
+          <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">{{ 'profile.active_pro' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

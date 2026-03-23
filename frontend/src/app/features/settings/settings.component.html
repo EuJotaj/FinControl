@@ -1,0 +1,188 @@
+<div class="h-full mt-24 px-6 pb-24 md:pb-8 md:pl-24 max-w-7xl mx-auto flex flex-col gap-8 reveal-up">
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-6">
+    <div>
+      <h1 class="title-technical text-4xl text-slate-900 dark:text-white">
+        {{ 'settings.title' | translate }} <span class="text-emerald-500">{{ 'settings.subtitle' | translate | slice:0:7 }}</span>
+      </h1>
+      <p class="mt-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+        {{ 'settings.subtitle' | translate }}
+      </p>
+    </div>
+
+    <!-- Unsaved changes badge -->
+    <div *ngIf="isDirty && !isSaving"
+      class="flex items-center gap-2 text-rose-500 text-[10px] font-black uppercase tracking-widest bg-rose-500/5 border border-rose-500/20 px-4 py-2 rounded-lg animate-pulse">
+      <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+      {{ 'settings.buffer_unsynced' | translate }}
+    </div>
+  </div>
+
+  <!-- Toast alerts (Precision Style) -->
+  <div *ngIf="saveSuccess"
+    class="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-lg px-5 py-4 text-[10px] font-black uppercase tracking-widest animate-reveal-in">
+    <span class="material-icons-outlined text-base">check_circle</span>
+    {{ 'settings.protocol_saved' | translate }}
+  </div>
+  <div *ngIf="saveError"
+    class="flex items-center gap-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-lg px-5 py-4 text-[10px] font-black uppercase tracking-widest animate-reveal-in">
+    <span class="material-icons-outlined text-base">error_outline</span>
+    {{ 'settings.save_error' | translate }}
+  </div>
+
+  <!-- Loading skeleton -->
+  <ng-container *ngIf="isLoading">
+    <div *ngFor="let _ of [1,2,3]" class="precision-card p-10 space-y-6 animate-pulse mt-4">
+      <div class="h-2 w-32 bg-slate-200 dark:bg-slate-800 rounded"></div>
+      <div class="h-12 w-full bg-slate-100 dark:bg-slate-900/50 rounded-lg"></div>
+    </div>
+  </ng-container>
+
+  <form [formGroup]="settingsForm" *ngIf="!isLoading" class="space-y-12 mt-4">
+
+    <!-- ─── Preferências Regionais ─────────────────────────────────────── -->
+    <div class="precision-card overflow-hidden">
+      <div class="px-8 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-slate-50/30 dark:bg-slate-900/30">
+        <span class="material-icons-outlined text-sm text-slate-400">language</span>
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ 'settings.regional' | translate }}</h3>
+      </div>
+      <div class="p-8 space-y-8">
+        <!-- Idioma -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div>
+            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">{{ 'settings.language' | translate }}</p>
+            <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">{{ 'settings.lang_sub' | translate }}</p>
+          </div>
+          <select formControlName="language"
+            class="w-full sm:w-64 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-5 py-3 text-xs font-black uppercase tracking-widest focus:ring-1 focus:ring-emerald-500 outline-none dark:text-white transition-all appearance-none cursor-pointer">
+            <option value="pt-BR">🇧🇷 PT-BR / PORTUGUÊS</option>
+            <option value="en-US">🇺🇸 EN-US / ENGLISH</option>
+            <option value="es-ES">🇪🇸 ES-ES / ESPAÑOL</option>
+          </select>
+        </div>
+
+        <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
+
+        <!-- Moeda -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div>
+            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">{{ 'settings.currency' | translate }}</p>
+            <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">{{ 'settings.curr_sub' | translate }}</p>
+          </div>
+          <select formControlName="currency"
+            class="w-full sm:w-64 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-5 py-3 text-xs font-black uppercase tracking-widest focus:ring-1 focus:ring-emerald-500 outline-none dark:text-white transition-all appearance-none cursor-pointer">
+            <option value="BRL">BRL / REAL BRASILEIRO</option>
+            <option value="USD">USD / DÓLAR AMERICANO</option>
+            <option value="EUR">EUR / EURO EUROPEU</option>
+            <option value="GBP">GBP / LIBRA ESTERLINA</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Equipe & Workspace ───────────────────────────────────────────────── -->
+    <div class="precision-card overflow-hidden">
+      <div class="px-8 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-slate-50/30 dark:bg-slate-900/30">
+        <span class="material-icons-outlined text-sm text-slate-400">group</span>
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ 'settings.workspace_team' | translate }}</h3>
+      </div>
+      <div class="p-8 flex flex-col sm:flex-row items-center justify-between gap-8">
+        <div>
+          <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">{{ 'settings.manage_access' | translate }}</p>
+          <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium max-w-sm">{{ 'settings.team_desc' | translate }}</p>
+        </div>
+        <a routerLink="/settings/team" class="whitespace-nowrap px-8 py-3 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all hover:bg-emerald-500 dark:hover:bg-emerald-400 shadow-xl">
+          {{ 'settings.team_panel' | translate }} →
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── Notificações ───────────────────────────────────────────────── -->
+    <div class="precision-card overflow-hidden">
+      <div class="px-8 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-slate-50/30 dark:bg-slate-900/30">
+        <span class="material-icons-outlined text-sm text-slate-400">notifications_none</span>
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ 'settings.notifs' | translate }}</h3>
+      </div>
+      <div class="divide-y divide-slate-100 dark:divide-slate-800">
+        <!-- Push -->
+        <div class="flex items-center justify-between px-8 py-6">
+          <div>
+            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">{{ 'settings.push' | translate }}</p>
+            <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">{{ 'settings.push_sub' | translate }}</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+            <input type="checkbox" formControlName="pushNotifications" class="sr-only peer">
+            <div class="w-12 h-6 bg-slate-200 dark:bg-slate-800 rounded-full peer peer-checked:bg-emerald-500
+              after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white dark:after:bg-slate-400
+              after:rounded after:h-4 after:w-4 after:transition-all
+              peer-checked:after:translate-x-6 peer-checked:after:bg-white transition-all"></div>
+          </label>
+        </div>
+
+        <!-- Email summary -->
+        <div class="flex items-center justify-between px-8 py-6">
+          <div>
+            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">{{ 'settings.email_sum' | translate }}</p>
+            <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">{{ 'settings.email_sub' | translate }}</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+            <input type="checkbox" formControlName="emailSummary" class="sr-only peer">
+            <div class="w-12 h-6 bg-slate-200 dark:bg-slate-800 rounded-full peer peer-checked:bg-emerald-500
+              after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white dark:after:bg-slate-400
+              after:rounded after:h-4 after:w-4 after:transition-all
+              peer-checked:after:translate-x-6 peer-checked:after:bg-white transition-all"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Segurança ──────────────────────────────────────────────────── -->
+    <div class="precision-card overflow-hidden">
+      <div class="px-8 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-slate-50/30 dark:bg-slate-900/30">
+        <span class="material-icons-outlined text-sm text-slate-400">shield</span>
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ 'settings.security' | translate }}</h3>
+      </div>
+      <div class="px-8 py-6">
+        <div class="flex items-start justify-between gap-6">
+          <div>
+            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">{{ 'settings.2fa' | translate }}</p>
+            <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">{{ 'settings.2fa_sub' | translate }}</p>
+            <div *ngIf="settingsForm.value.twoFactorAuth"
+              class="mt-3 inline-flex items-center gap-2 text-emerald-500 text-[9px] font-black uppercase tracking-widest bg-emerald-500/5 border border-emerald-500/20 px-3 py-1 rounded-lg">
+              <span class="material-icons-outlined text-xs">verified_user</span>
+              Active Guard
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer flex-shrink-0 mt-1">
+            <input type="checkbox" formControlName="twoFactorAuth" class="sr-only peer">
+            <div class="w-12 h-6 bg-slate-200 dark:bg-slate-800 rounded-full peer peer-checked:bg-emerald-500
+              after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white dark:after:bg-slate-400
+              after:rounded after:h-4 after:w-4 after:transition-all
+              peer-checked:after:translate-x-6 peer-checked:after:bg-white transition-all"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Save Button ────────────────────────────────────────────────── -->
+    <div class="flex items-center justify-end gap-6 pt-4">
+      <button type="button" (click)="saveSettings()"
+        [disabled]="isSaving || !isDirty"
+        class="inline-flex items-center gap-3 px-12 py-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-2xl
+          bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 hover:bg-emerald-500 dark:hover:bg-emerald-400
+          disabled:opacity-20 disabled:grayscale disabled:cursor-not-allowed disabled:shadow-none group">
+
+        <!-- Loading spinner -->
+        <svg *ngIf="isSaving" class="animate-spin h-3 w-3 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+
+        <span class="material-icons-outlined text-base group-hover:scale-110 transition-transform" *ngIf="!isSaving">sync</span>
+        {{ isSaving ? ('settings.executing' | translate) : ('settings.sync' | translate) }}
+      </button>
+    </div>
+
+  </form>
+</div>
